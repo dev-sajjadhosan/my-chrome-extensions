@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Fakley</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/fontawesome.min.css"
+      integrity="sha512-v8QQ0YQ3H4K6Ic3PJkym91KoeNT5S3PnDKvqnwqFD1oiqIl653crGZplPdU5KKtHjO0QKcQ2aUlQZYjHczkmGw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Optional: Show this only before extension connects -->
+    <div class="container" >
+      <h2> <img src="/icons/icon.png" alt="">Fakley</h2>
+      <button id="connectBtn">Start </button>
+    </div>
+
+    <!-- Main Interface -->
+    <div id="mainUI" style="display: none">
+      <!-- <h2 class="m_title">Fakley</h2> -->
+      <p>Choose Types to Generate Fake Data</p>
+
+      <div class="checkbox-group">
+        <!-- Original types with icons -->
+        <label class="checkbox-btn">
+          <input type="checkbox" value="users" hidden checked />
+          <i class="fa-solid fa-user"></i>
+          Users
+        </label>
+        <label class="checkbox-btn">
+          <input type="checkbox" value="products" hidden />
+          <i class="fa-solid fa-box"></i>
+          Products
+        </label>
+        <label class="checkbox-btn">
+          <input type="checkbox" value="images" hidden />
+          <i class="fa-solid fa-image"></i>
+          Images
+        </label>
+        <label class="checkbox-btn">
+          <input type="checkbox" value="avatars" hidden />
+          <i class="fa-solid fa-user-circle"></i>
+          Avatars
+        </label>
+        <label class="checkbox-btn">
+          <input type="checkbox" value="posts" hidden />
+          <i class="fa-solid fa-file-alt"></i>
+          Posts
+        </label>
+        <div class="custom-dropdown">
+          <button id="dropdownToggle" class="dropdown-toggle">
+            <i class="fa-solid fa-angle-down"></i>
+          </button>
+
+          <div id="dropdownMenu" class="dropdown-menu hidden">
+            <div class="dropDown_list">
+              <label
+                class="dropdown-item"
+                data-type="comments"
+                draggable="true"
+              >
+                <input type="checkbox" value="comments" hidden />
+                <i class="fas fa-comments"></i> Comments
+              </label>
+              <label class="dropdown-item" data-type="todos" draggable="true">
+                <input type="checkbox" value="todos" hidden />
+                <i class="fas fa-list-check"></i> Todos
+              </label>
+              <label
+                class="dropdown-item"
+                data-type="companies"
+                draggable="true"
+              >
+                <input type="checkbox" value="companies" hidden />
+                <i class="fas fa-building"></i> Companies
+              </label>
+              <label
+                class="dropdown-item"
+                data-type="locations"
+                draggable="true"
+              >
+                <input type="checkbox" value="locations" hidden />
+                <i class="fas fa-location-dot"></i> Locations
+              </label>
+              <label
+                class="dropdown-item"
+                data-type="transactions"
+                draggable="true"
+              >
+                <input type="checkbox" value="transactions" hidden />
+                <i class="fas fa-credit-card"></i> Transactions
+              </label>
+              <label class="dropdown-item" data-type="emails" draggable="true">
+                <input type="checkbox" value="emails" hidden />
+                <i class="fas fa-envelope"></i> Emails
+              </label>
+              <label class="dropdown-item" data-type="phones" draggable="true">
+                <input type="checkbox" value="phones" hidden />
+                <i class="fas fa-phone"></i> Phones
+              </label>
+              <label class="dropdown-item" data-type="uuids" draggable="true">
+                <input type="checkbox" value="uuids" hidden />
+                <i class="fas fa-barcode"></i> UUIDs
+              </label>
+              <label class="dropdown-item" data-type="reviews" draggable="true">
+                <input type="checkbox" value="reviews" hidden />
+                <i class="fas fa-star"></i> Product Reviews
+              </label>
+              <label class="dropdown-item" data-type="books" draggable="true">
+                <input type="checkbox" value="books" hidden />
+                <i class="fas fa-book"></i> Books
+              </label>
+              <label
+                class="dropdown-item"
+                data-type="notifications"
+                draggable="true"
+              >
+                <input type="checkbox" value="notifications" hidden />
+                <i class="fas fa-bell"></i> Notifications
+              </label>
+            </div>
+            <button id="generateBtn" class="drop_generate">
+              <i class="fa-solid fa-bolt"></i>
+              Generate
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <label for="quantity" class="quantity_title">Quantity per type</label>
+      <div class="grid">
+        <input
+          type="number"
+          id="quantity"
+          min="1"
+          value="5"
+          placeholder="Quantity Amount"
+        />
+        <button id="generateBtn">
+          <i class="fa-solid fa-bolt"></i>
+          Generate
+        </button>
+      </div>
+
+      <!-- Results Section -->
+      <div id="results">
+        <h3 class="res_title">API URLs</h3>
+        <ul id="apiUrls">
+          <li>
+            <p>❌ No Url is here! Please Generate⚡to copy url.</p>
+          </li>
+        </ul>
+
+        <div class="json_popup">
+          <div class="flex">
+            <h3 class="res_title">Generated JSON Data</h3>
+            <div class="flex_btns">
+              <button class="h_btn" id="copyBtn2">
+                <i class="fa-solid fa-clone"></i>
+              </button>
+              <button class="h_btn" id="json_popup_cl">
+                <i class="fa-solid fa-angle-down"></i>
+              </button>
+            </div>
+          </div>
+          <pre id="output" style="display: none"></pre>
+        </div>
+      </div>
+
+      <!-- Utility Buttons -->
+      <div class="buttons">
+        <button id="showBtn">
+          <i class="fa-regular fa-file-code"></i>
+          Show
+        </button>
+        <button id="copyBtn">
+          <i class="fa-solid fa-clone"></i>
+          Copy
+        </button>
+        <button id="downloadBtn">
+          <i class="fa-solid fa-download"></i>
+          Export
+        </button>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
