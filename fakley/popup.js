@@ -1,5 +1,6 @@
 const connectBtn = document.getElementById('connectBtn')
 const mainUI = document.getElementById('mainUI')
+const imageUI = document.getElementById('imageUI')
 const generateBtn = document.querySelectorAll('#generateBtn')
 const output = document.getElementById('output')
 const copyBtn = document.getElementById('copyBtn')
@@ -11,11 +12,25 @@ const closeJsonBtn = document.getElementById('json_popup_cl')
 const jsonPopupModal = document.querySelector('.json_popup')
 const container = document.querySelector('.container')
 
+const apiBtn = document.getElementById('api')
+const imageBtn = document.getElementById('image')
+const settingBtn = document.getElementById('setting')
+
 let c = false
 
 connectBtn?.addEventListener('click', () => {
   container.style.display = 'none'
   mainUI.style.display = 'block'
+  document.querySelector('.nav_btns').style.display = 'flex'
+})
+
+apiBtn.addEventListener('click', () => {
+  mainUI.style.display = 'block'
+  imageUI.style.display = 'none'
+})
+imageBtn.addEventListener('click', () => {
+  mainUI.style.display = 'none'
+  imageUI.style.display = 'block'
 })
 
 // Extend with new types
@@ -80,7 +95,7 @@ for (const generate of generateBtn) {
       const li = document.createElement('li')
       li.innerHTML = `
     <p>${url}</p>
-    <p>Copy</p>
+    <p></p>
     `
       apiUrlsList.appendChild(li)
 
@@ -89,9 +104,9 @@ for (const generate of generateBtn) {
         // Show the textContent of the second child (the "Copy" <p>)
         const aaa = li.children
         if (aaa[1]) {
-          aaa[1].textContent = '✔️Copied'
+          aaa[1].textContent = '✔️'
           setTimeout(() => {
-            aaa[1].textContent = 'Copy'
+            aaa[1].textContent = ''
           }, 1500)
         }
       })
@@ -184,3 +199,202 @@ showJsonBtn?.addEventListener('click', () => {
 closeJsonBtn?.addEventListener('click', () => {
   jsonPopupModal.style.display = 'none'
 })
+
+// API configuration
+const apiKey = 'VT1JP8M1ky2Q2fPMBsCi0GF9v2LgKZPmtWnypwjcUBKf4eWr3eE8qH34'
+const apiUrl = 'https://api.pexels.com/v1/search'
+const grid = document.getElementById('imageGrid')
+
+// Helper: get selected image type
+function getSelectedImageType() {
+  const radios = document.querySelectorAll('input[name="imageType"]')
+  for (const r of radios) if (r.checked) return r.value
+  return 'avatar'
+}
+
+// Fetch images from Pexels API
+async function fetchPexelsImages(keyword = 'nature', count = 3) {
+  const randomPage = Math.floor(Math.random() * 50) + 1 // Pexels allows pagination
+
+  const res = await fetch(
+    `${apiUrl}?query=${keyword}&per_page=${count}&page=${randomPage}`,
+    {
+      headers: {
+        Authorization: apiKey,
+      },
+    },
+  )
+
+  if (!res.ok) {
+    alert('Failed to fetch images from Pexels.')
+    return []
+  }
+
+  const data = await res.json()
+  const resImage = data.photos.map((photo) => photo.src.large)
+  return resImage
+}
+
+// Render images in the grid
+function renderImages(urls) {
+  const urlsDiv = document.getElementById('imageUrls')
+  grid.innerHTML = ''
+  urlsDiv.innerHTML = ''
+
+  urls.forEach((url, idx) => {
+    const img = document.createElement('img')
+    img.src = url
+    img.alt = `Generated Image ${idx + 1}`
+    grid.appendChild(img)
+
+    // const li = document.createElement('li')
+    // // urlItem.className = 'image-url-item'
+    // li.innerHTML = `
+    // <p>${url}</p>
+    // <p id='img_cp'></p>
+    // `
+    // urlsDiv.appendChild(li)
+
+    // li?.addEventListener('click', () => {
+    //   navigator.clipboard.writeText(url)
+    //   // Show the textContent of the second child (the "Copy" <p>)
+    //   const aaa = li.children
+    //   if (aaa[1]) {
+    //     aaa[1].textContent = '✔️'
+    //     setTimeout(() => {
+    //       aaa[1].textContent = ''
+    //     }, 1500)
+    //   }
+    // })
+    img?.addEventListener('click', () => {
+      navigator.clipboard.writeText(url)
+      img.style.border = '2px solid orange'
+      img.style.scale = '.95'
+      setTimeout(() => {
+        img.style.border = 'none'
+        img.style.scale = '1'
+      }, 2000)
+    })
+  })
+}
+
+// On click: Generate images from API
+document.getElementById('generateImageBtn').onclick = function () {
+  const type = getSelectedImageType()
+  const count = Math.max(
+    1,
+    Math.min(8, parseInt(document.getElementById('imageCount').value) || 1),
+  )
+
+  let keyword = type
+  if (type === 'custom') {
+    keyword = prompt('Enter custom keyword:') || 'random'
+  }
+
+  grid.innerHTML = ''
+  for (let i = 0; i < count; i++) {
+    const span = document.createElement('span')
+    grid.appendChild(span)
+  }
+  fetchPexelsImages(keyword, count + 1)
+    .then(renderImages)
+    .finally(() => {
+      grid?.querySelectorAll('span')?.forEach((s) => s.remove())
+    })
+}
+
+// Upload image from local
+document.getElementById('uploadImageInput').onchange = function (e) {
+  const files = e.target.files
+  if (!files || !files.length) return
+
+  const urls = []
+  for (let i = 0; i < files.length; ++i) {
+    urls.push(URL.createObjectURL(files[i]))
+  }
+  renderImages(urls)
+}
+
+// Helper: get selected image type
+function getSelectedImageType() {
+  const radios = document.querySelectorAll('input[name="imageType"]')
+  for (const r of radios) if (r.checked) return r.value
+  return 'avatar'
+}
+
+// Generate free AI-style avatars using Dicebear (no API key required)
+function getAIImageUrl(type) {
+  const seed = `${Date.now()}-${Math.floor(Math.random() * 100000)}`
+  switch (type) {
+    case 'avatar':
+      return `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`
+    case 'nature':
+      return `https://api.dicebear.com/7.x/shapes/svg?seed=${seed}`
+    case 'technology':
+      return `https://api.dicebear.com/7.x/icons/svg?seed=${seed}`
+    case 'abstract':
+      return `https://api.dicebear.com/7.x/shapes/svg?seed=${seed}`
+    default:
+      return `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`
+  }
+}
+
+// Render image results
+function renderImages(urls) {
+  const grid = document.getElementById('imageGrid')
+  const urlsDiv = document.getElementById('imageUrls')
+  grid.innerHTML = ''
+  // urlsDiv.innerHTML = ''
+
+  urls.forEach((url, idx) => {
+    const img = document.createElement('img')
+    img.src = url
+    img.alt = `AI Generated ${idx + 1}`
+    grid.appendChild(img)
+
+    // const li = document.createElement('li')
+    // // urlItem.className = 'image-url-item'
+    // li.innerHTML = `
+    // <p>${url}</p>
+    // <p id='img_cp'></p>
+    // `
+    // urlsDiv.appendChild(li)
+
+    // li?.addEventListener('click', () => {
+    //   navigator.clipboard.writeText(url)
+    //   // Show the textContent of the second child (the "Copy" <p>)
+    //   const aaa = li.children
+    //   if (aaa[1]) {
+    //     aaa[1].textContent = '✔️'
+    //     setTimeout(() => {
+    //       aaa[1].textContent = ''
+    //     }, 1500)
+    //   }
+    // })
+    img?.addEventListener('click', () => {
+      navigator.clipboard.writeText(url)
+      img.style.border = '2px solid orange'
+      img.style.scale = '.95'
+      setTimeout(() => {
+        img.style.border = 'none'
+        img.style.scale = '1'
+      }, 2000)
+    })
+  })
+}
+
+// AI Generate Button Handler
+document.getElementById('aiImageBtn').onclick = function () {
+  const type = getSelectedImageType()
+  const count = Math.max(
+    3,
+    Math.min(8, parseInt(document.getElementById('imageCount').value) || 1),
+  )
+
+  const urls = []
+  for (let i = 0; i < count; i++) {
+    urls.push(getAIImageUrl(type))
+  }
+
+  renderImages(urls)
+}
