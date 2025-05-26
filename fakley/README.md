@@ -7,12 +7,21 @@
 
 ## 🚀 Features
 
+### New UI Look with Nav-Bar
+
 - 🔧 Generate dynamic dummy API endpoints instantly
 - 🧾 Export generated JSON data
 - 🌐 Deploy data to public mock APIs
 - 📋 Copy data to clipboard
 - 🗃️ Persistent storage using browser storage API
 - 🖼️ Simple and intuitive popup interface
+
+## new - added
+
+- 🪄 AI Image Generated
+- 🔗 Api Image Generated
+- 🔵 Select image type
+- 🔵 Click to on image copy image url path
 
 ## 📁 Project Structure
 
@@ -60,9 +69,14 @@ fakley/
 
 ## 📷 Screenshots
 
-![API URL Generator](screenShort/api_url.png)
-![Home View](screenShort/home.png)
-![JSON Viewer](screenShort/json_codes.png)
+<img src="./screenShort/home.png" alt="Sample Image" width="250"/>
+<img src="./screenShort/image_ui.png" alt="Sample Image" width="250"/>
+<img src="./screenShort/api_url.png" alt="Sample Image" width="250"/>
+<img src="./screenShort/api_generated.png" alt="Sample Image" width="250"/>
+<img src="./screenShort/more-data-types.png" alt="Sample Image" width="250"/>
+<img src="./screenShort/json_codes.png" alt="Sample Image" width="250"/>
+<img src="./screenShort/ai_generated.png" alt="Sample Image" width="250"/>
+<img src="./screenShort/upload_imgs.png" alt="Sample Image" width="250"/>
 
 ## 📄 License
 
